@@ -1,0 +1,14 @@
+apiVersion: v1
+description: Knative Helm chart for Kubernetes
+name: knative
+version: 0.1
+appVersion: 0.1.0
+home: https://istio.io/
+icon: https://raw.githubusercontent.com/knative/docs/master/images/logo/rgb/knative-logo-rgb.jpg
+sources:
+- https://github.com/knative/
+maintainers:
+- name: Tunde Oladipupo
+  email: simplytunde@gmail.com
+- name: Babatunde Olu-isa
+  email: babatundeoluisa@gmail.com

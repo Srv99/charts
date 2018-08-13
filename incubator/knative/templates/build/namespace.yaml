@@ -1,4 +1,4 @@
-{{- if .Values.install -}}
+{{- if .Values.build.install -}}
 ---
 apiVersion: v1
 kind: Namespace

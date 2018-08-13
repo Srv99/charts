@@ -1,5 +1,5 @@
 {{ if .Values.rbac }}
-{{- if .Values.install -}}
+{{- if .Values.build.install -}}
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1

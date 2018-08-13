@@ -1,0 +1,13 @@
+## Install Default RBAC roles and bindings
+rbac: true
+
+build:
+  install: true
+serving:
+  install: true
+  light: false #For minikube users
+istio:
+  install: true
+  version: 0.8.0
+  service:
+    serviceType: LoadBalancer

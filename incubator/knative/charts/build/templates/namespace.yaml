@@ -1,0 +1,7 @@
+{{- if .Values.install -}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: knative-build
+{{- end -}}

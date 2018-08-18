@@ -7,7 +7,7 @@ metadata:
   namespace: kube-system
   annotations:
       "helm.sh/hook": "pre-install"
-      "helm.sh/hook-delete-policy": "hook-succeeded"
+      "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
 spec:
   template:
     metadata:
@@ -16,7 +16,7 @@ spec:
       serviceAccountName: tiller
       containers:
         - name: helm
-          image: dtzar/helm-kubectl # dtzar/helm-kubectl #linkyard/docker-helm #
+          image: dtzar/helm-kubectl:2.9.1 # dtzar/helm-kubectl #linkyard/docker-helm #
           command: ["/bin/sh","-c"]
           args: [ "wget -qO- https://github.com/istio/istio/archive/{{ .Values.istio.version }}.tar.gz | tar xvz;helm upgrade istio -i istio-{{ .Values.istio.version }}/install/kubernetes/helm/istio --set global.tag={{ .Values.istio.version }} --namespace istio-system" ] #args: ["helm ls"]
         - name:  kubectl
@@ -25,7 +25,7 @@ spec:
           args: ["kubectl label ns default --overwrite istio-injection=enabled"]
       restartPolicy: OnFailure
 ---
-  
+
 {{- end -}}
 
 

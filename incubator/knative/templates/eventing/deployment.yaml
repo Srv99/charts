@@ -1,0 +1,59 @@
+{{- if .Values.eventing.install -}}
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: eventing-controller
+  namespace: knative-eventing
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eventing-controller
+    spec:
+      containers:
+      - args:
+        - -logtostderr
+        - -stderrthreshold
+        - INFO
+        image: gcr.io/knative-releases/github.com/knative/eventing/cmd/controller@sha256:242c637589869d16b5be58ede2de1a0ebf1149eeec92fd1da4ed9ce063d8b75b
+        name: eventing-controller
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /etc/config-logging
+          name: config-logging
+      serviceAccountName: eventing-controller
+      volumes:
+      - configMap:
+          name: config-logging
+        name: config-logging
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: webhook
+  namespace: knative-eventing
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: webhook
+        role: webhook
+    spec:
+      containers:
+      - image: gcr.io/knative-releases/github.com/knative/eventing/cmd/webhook@sha256:b8121797d9c5df619984476c35cf90b08bc3ff80ddd931ec41928e268e3f3a34
+        name: webhook
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /etc/config-logging
+          name: config-logging
+      serviceAccountName: eventing-controller
+      volumes:
+      - configMap:
+          name: config-logging
+        name: config-logging
+{{- end -}}

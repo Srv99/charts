@@ -1,0 +1,7 @@
+{{- if .Values.eventing.install -}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: knative-eventing
+{{- end -}}

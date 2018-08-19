@@ -1,0 +1,35 @@
+{{- if .Values.eventing.install -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: knative-channels-bus
+rules:
+- apiGroups:
+  - channels.knative.dev
+  resources:
+  - buses
+  - clusterbuses
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - channels.knative.dev
+  resources:
+  - channels
+  - subscriptions
+  verbs:
+  - get
+  - watch
+  - list
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+{{- end -}}

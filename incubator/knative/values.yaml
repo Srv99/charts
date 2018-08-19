@@ -5,6 +5,7 @@ build:
   install: true
 serving:
   install: true
+  version: v0.1.1
   light: false #For minikube users
 istio:
   install: true

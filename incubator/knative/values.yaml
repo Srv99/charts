@@ -3,6 +3,8 @@ rbac: true
 
 build:
   install: true
+eventing:
+  install: true
 serving:
   install: true
   light: false #For minikube users

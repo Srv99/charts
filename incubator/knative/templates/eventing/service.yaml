@@ -1,0 +1,16 @@
+{{- if .Values.eventing.install -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    role: webhook
+  name: webhook
+  namespace: knative-eventing
+spec:
+  ports:
+  - port: 443
+    targetPort: 443
+  selector:
+    role: webhook
+{{- end -}}

@@ -5,8 +5,12 @@ kind: Service
 metadata:
   labels:
     role: webhook
+    app: {{.Chart.Name}}-eventing
+    chart: {{.Chart.Name}}-{{.Chart.Version}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
   name: webhook
-  namespace: knative-eventing
+  namespace: {{ .Values.eventing.namespace }}
 spec:
   ports:
   - port: 443

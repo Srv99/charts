@@ -33,5 +33,11 @@ data:
 kind: ConfigMap
 metadata:
   name: config-logging
-  namespace: knative-build
+  namespace: {{ .Values.build.namespace }}
+  labels:
+    app: {{.Chart.Name}}-build
+    component: config-logging
+    chart: {{.Chart.Name}}-{{.Chart.Version}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 {{- end -}}

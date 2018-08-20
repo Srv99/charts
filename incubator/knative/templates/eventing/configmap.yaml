@@ -6,7 +6,12 @@ data:
 kind: ConfigMap
 metadata:
   name: flow-controller-config
-  namespace: knative-eventing
+  namespace:  {{ .Values.eventing.namespace }}
+  labels:
+    app: {{.Chart.Name}}-eventing
+    chart: {{.Chart.Name}}-{{.Chart.Version}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 
 ---
 apiVersion: v1
@@ -37,5 +42,10 @@ data:
 kind: ConfigMap
 metadata:
   name: config-logging
-  namespace: knative-eventing
+  namespace:  {{ .Values.eventing.namespace }}
+  labels:
+    app: {{.Chart.Name}}-eventing
+    chart: {{.Chart.Name}}-{{.Chart.Version}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 {{- end -}}

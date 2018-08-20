@@ -3,56 +3,67 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: build-controller
-  namespace: knative-build
+  name: {{ .Values.build.controller.name }}
+  namespace: {{ .Values.build.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.build.controller.replicaCount }}
   template:
     metadata:
       labels:
-        app: build-controller
+        app: {{ .Values.build.controller.name }}
+        role: {{ .Values.build.controller.name }}
+        chart: {{.Chart.Name}}-{{.Chart.Version}}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    selector:
+      matchLabels:
+        app: {{ .Values.build.controller.name }}
+        role: {{ .Values.build.controller.name }}
+        release: {{ .Release.Name }}
     spec:
       containers:
       - args:
-        - -builder
-        - cluster
-        - -logtostderr
-        - -stderrthreshold
-        - INFO
-        - -creds-image
-        - gcr.io/build-crd/github.com/knative/build/cmd/creds-init@sha256:cfcc14889abe29b54d17ff6cf414918d9d92ff02bb112525742ec2e30117899f
-        - -git-image
-        - gcr.io/build-crd/github.com/knative/build/cmd/git-init@sha256:d52c29a4a1d83712b048bd32dbb5f97b7d2791af9b892f68fe94e162932ac66e
-        image: gcr.io/build-crd/github.com/knative/build/cmd/controller@sha256:9220968c9aae7e6edac97effc7b693fcf5bbb17edf78aa14347de87b15ac8840
-        name: build-controller
-      serviceAccountName: build-controller
+          {{- range .Values.build.controller.args }}
+            - {{ . | title }}
+          {{- end }}
+        image: {{ .Values.build.controller.image.repository  }}:{{ .Values.build.controller.image.tag }}
+        name:  build-controller
+        imagePullPolicy: {{ .Values.build.controller.image.pullPolicy }}
+      serviceAccountName: {{ .Values.build.serviceAccount.name }}
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: build-webhook
-  namespace: knative-build
+  name: {{ .Values.build.webhook.name }}
+  namespace: {{ .Values.build.namespace }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.build.webhook.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.build.webhook.name }}
+      role: {{ .Values.build.webhook.name }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: build-webhook
-        role: build-webhook
+        app: {{ .Values.build.webhook.name }}
+        role: {{ .Values.build.webhook.name }}
+        chart: {{.Chart.Name}}-{{.Chart.Version}}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
     spec:
       containers:
-      - args:
-        - -builder
-        - cluster
-        - -logtostderr
-        - -stderrthreshold
-        - INFO
-        image: gcr.io/build-crd/github.com/knative/build/cmd/webhook@sha256:a7ed8fb8828f71a6aba3f9f9899eff6c867ceb5a8ceeaed903008c2296f919fb
+      - args:|-
+          {{- range .Values.build.webhook.args }}
+            {{ . | title }}
+          {{- end }}
+        image: {{ .Values.build.webhook.image.repository }}:{{ .Values.build.webhook.image.tag }}
         name: build-webhook
+        imagePullPolicy: {{ .Values.build.webhook.image.pullPolicy }}
         volumeMounts:
         - mountPath: /etc/config-logging
           name: config-logging
-      serviceAccountName: build-controller
+      serviceAccountName: {{ .Values.build.serviceAccount.name }}
       volumes:
       - configMap:
           name: config-logging

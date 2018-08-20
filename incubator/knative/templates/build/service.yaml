@@ -4,9 +4,14 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: build-controller
-  name: build-controller
-  namespace: knative-build
+    app: {{.Chart.Name}}-build
+    component: {{ .Values.build.controller.name }}
+    role: {{ .Values.build.controller.name }}
+    chart: {{.Chart.Name}}-{{.Chart.Version}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  name: {{ .Values.build.controller.name }}
+  namespace: {{ .Values.build.namespace }}
 spec:
   ports:
   - name: metrics
@@ -14,15 +19,20 @@ spec:
     protocol: TCP
     targetPort: 9090
   selector:
-    app: build-controller
+    app: {{ .Values.build.controller.name }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    role: build-webhook
+      app: {{.Chart.Name}}-build
+      component: build-webhook
+      role: build-webhook
+      chart: {{.Chart.Name}}-{{.Chart.Version}}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
   name: build-webhook
-  namespace: knative-build
+  namespace: {{ .Values.build.namespace }}
 spec:
   ports:
   - port: 443

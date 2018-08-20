@@ -1,6 +1,6 @@
 # Knative
 
-**This chart install knative components(Build, Serving and Eventing)
+This chart install knative components(Build, Serving and Eventing).
 [Knative](https://github.com/knative/) extends Kubernetes to provide a set of middleware components that are essential to build modern, source-centric, and container-based applications that can run anywhere: on premises, in the cloud, or even in a third-party data center.
 
 
@@ -25,8 +25,6 @@ to init your cluster with helm package manager using using the canary image.
 By default the chart is installed with associated RBAC roles and rolebindings.
 
 ## Installing the Chart
-
-The first step will install the prerequisite CRDs.
 
 To install the chart with the release name `knative` into your current namespace:
 

@@ -8,7 +8,7 @@ eventing:
 serving:
   install: true
   version: v0.1.1
-  light: false #For minikube users
+  lite: false #For minikube users
 istio:
   install: true
   version: 0.8.0

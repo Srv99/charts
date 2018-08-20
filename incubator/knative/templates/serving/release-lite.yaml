@@ -1,3 +1,4 @@
+{{- if and (.Values.serving.install) (.Values.serving.lite) -}}
 ---
 apiVersion: v1
 kind: Namespace
@@ -1618,7 +1619,7 @@ data:
               "expr": "label_replace(sum(irate(istio_request_count{destination_service=~\"$http_destination\",source_service=~\"$source\",response_code!~\"5.*\",destination_version=~\"$destination_version\"}[1m])) by (destination_service) / sum(irate(istio_request_count{destination_service=~\"$http_destination\",source_service=~\"$source\",destination_version=~\"$destination_version\"}[1m])) by (destination_service), \"destination_service\", \"$1\", \"destination_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_service }}",
+              "legendFormat": {{ "{{ destination_service }}" }},
               "refId": "A",
               "step": 2
             }
@@ -1698,7 +1699,7 @@ data:
             {
               "expr": "label_replace(sum(irate(istio_request_count{source_service=~\"$source\",source_version=~\"$source_version\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",response_code=~\"4.*\"}[1m])) by (destination_service), \"destination_service\", \"$1\", \"destination_service\", \"(.*).svc.cluster.local\")",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_service }}",
+              "legendFormat": {{ "{{ destination_service }}" }} ,
               "refId": "A",
               "step": 2
             }
@@ -1778,7 +1779,7 @@ data:
             {
               "expr": "label_replace(sum(irate(istio_request_count{source_service=~\"$source\",source_version=~\"$source_version\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",response_code=~\"5.*\"}[1m])) by (destination_service) , \"destination_service\", \"$1\", \"destination_service\", \"(.*).svc.cluster.local\")",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_service }}",
+              "legendFormat": {{ "{{ destination_service }}" }},
               "refId": "A",
               "step": 2
             }
@@ -1902,7 +1903,7 @@ data:
             {
               "expr": "label_replace(round(sum(irate(istio_request_count{destination_service=~\"$http_destination\",destination_version=~\"$destination_version\"}[1m])) by (source_service, source_version, destination_version, response_code), 0.001), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version}} -> {{destination_version}} : {{ response_code }}",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version}} -> {{destination_version}} : {{ response_code }}" }},
               "refId": "B",
               "step": 2
             }
@@ -1985,7 +1986,7 @@ data:
               "expr": "label_replace(sum(irate(istio_request_count{source_version=~\"$source_version\",destination_service=~\"$http_destination\",source_service=~\"$source\",destination_version=~\"$destination_version\",response_code!~\"5.*\"}[1m])) by (source_service, source_version, destination_version) / sum(irate(istio_request_count{source_version=~\"$source_version\",destination_service=~\"$http_destination\",source_service=~\"$source\",destination_version=~\"$destination_version\"}[1m])) by (source_service, source_version, destination_version), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{source_service}}-{{source_version}} -> {{destination_version}}",
+              "legendFormat": {{ "{{source_service}}-{{source_version}} -> {{destination_version}}" }},
               "refId": "A",
               "step": 2
             }
@@ -2068,7 +2069,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.50, sum(irate(istio_request_duration_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p50)",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p50)" }},
               "refId": "D",
               "step": 2
             },
@@ -2076,7 +2077,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.90, sum(irate(istio_request_duration_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version,destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{source_version}} -> {{ destination_version }} (p90)",
+              "legendFormat": {{ "{{ source_service }}-{{source_version}} -> {{ destination_version }} (p90)" }},
               "refId": "A",
               "step": 2
             },
@@ -2084,7 +2085,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.95, sum(irate(istio_request_duration_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version,destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{source_version}} -> {{ destination_version }} (p95)",
+              "legendFormat": {{ "{{ source_service }}-{{source_version}} -> {{ destination_version }} (p95)" }},
               "refId": "B",
               "step": 2
             },
@@ -2092,7 +2093,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.99, sum(irate(istio_request_duration_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{source_version}} -> {{ destination_version }} (p99)",
+              "legendFormat": {{ "{{ source_service }}-{{source_version}} -> {{ destination_version }} (p99)" }},
               "refId": "C",
               "step": 2
             }
@@ -2175,7 +2176,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.50, sum(irate(istio_response_size_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p50)",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p50)" }},
               "refId": "D",
               "step": 2
             },
@@ -2183,7 +2184,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.90, sum(irate(istio_response_size_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p90)",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p90)" }},
               "refId": "A",
               "step": 2
             },
@@ -2191,7 +2192,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.95, sum(irate(istio_response_size_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p95)",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p95)" }},
               "refId": "B",
               "step": 2
             },
@@ -2199,7 +2200,7 @@ data:
               "expr": "label_replace(histogram_quantile(0.99, sum(irate(istio_response_size_bucket{source_service=~\"$source\",destination_service=~\"$http_destination\",destination_version=~\"$destination_version\",source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version, le)), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "hide": false,
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p99)",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version }} -> {{ destination_version }} (p99)" }},
               "refId": "C",
               "step": 2
             }
@@ -2324,7 +2325,7 @@ data:
             {
               "expr": "label_replace(round(sum(irate(istio_tcp_bytes_received{destination_service=~\"$tcp_destination\",destination_version=~\"$destination_version\", source_service=~\"$source\", source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version), 0.001), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "intervalFactor": 1,
-              "legendFormat": "{{ source_service }}-{{ source_version}} -> {{ destination_version }}",
+              "legendFormat": {{ "{{ source_service }}-{{ source_version}} -> {{ destination_version }}" }},
               "refId": "A",
               "step": 2
             }
@@ -2404,7 +2405,7 @@ data:
             {
               "expr": "label_replace(round(sum(irate(istio_tcp_bytes_sent{destination_service=~\"$tcp_destination\",destination_version=~\"$destination_version\", source_service=~\"$source\", source_version=~\"$source_version\"}[1m])) by (source_service, source_version, destination_version), 0.001), \"source_service\", \"$1\", \"source_service\", \"(.*).svc.cluster.local\")",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_version }} -> {{ source_service }}-{{source_version}} ",
+              "legendFormat": {{ "{{ destination_version }} -> {{ source_service }}-{{source_version}} " }},
               "refId": "A",
               "step": 2
             }
@@ -2704,14 +2705,14 @@ data:
               "format": "time_series",
               "instant": false,
               "intervalFactor": 2,
-              "legendFormat": "Virtual Memory ({{ job }})",
+              "legendFormat": {{"Virtual Memory ({{ job }})"}},
               "refId": "I"
             },
             {
               "expr": "sum(process_resident_memory_bytes{job=~\"mixer-.*\"}) by (job)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Resident Memory ({{ job }})",
+              "legendFormat": {{"Resident Memory ({{ job }})"}},
               "refId": "H"
             },
             {
@@ -2719,7 +2720,7 @@ data:
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
-              "legendFormat": "heap sys ({{ job }})",
+              "legendFormat": {{"heap sys ({{ job }})"}},
               "refId": "A"
             },
             {
@@ -2727,14 +2728,14 @@ data:
               "format": "time_series",
               "hide": true,
               "intervalFactor": 2,
-              "legendFormat": "heap alloc ({{ job }})",
+              "legendFormat": {{"heap alloc ({{ job }})"}},
               "refId": "D"
             },
             {
               "expr": "sum(go_memstats_alloc_bytes{job=~\"mixer-.*\"}) by (job)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Alloc ({{ job }})",
+              "legendFormat": {{"Alloc ({{ job }})"}},
               "refId": "F"
             },
             {
@@ -2742,14 +2743,14 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "Heap in-use ({{ job }})",
+              "legendFormat": {{"Heap in-use ({{ job }})"}},
               "refId": "E"
             },
             {
               "expr": "sum(go_memstats_stack_inuse_bytes{job=~\"mixer-.*\"}) by (job)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Stack in-use ({{ job }})",
+              "legendFormat": {{"Stack in-use ({{ job }})"}},
               "refId": "G"
             },
             {
@@ -2757,7 +2758,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ service }} total (k8s)",
+              "legendFormat": {{ "{{ service }} total (k8s)" }},
               "refId": "C"
             },
             {
@@ -2765,7 +2766,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ service }} - {{ container_name }} (k8s)",
+              "legendFormat": {{ "{{ service }} - {{ container_name }} (k8s)" }},
               "refId": "B"
             }
           ],
@@ -2846,7 +2847,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ service }} total (k8s)",
+              "legendFormat": {{ "{{ service }} total (k8s)" }},
               "refId": "A"
             },
             {
@@ -2854,7 +2855,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ service }} - {{ container_name }} (k8s)",
+              "legendFormat": {{ "{{ service }} - {{ container_name }} (k8s)" }},
               "refId": "B"
             },
             {
@@ -2862,7 +2863,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ job }} (self-reported)",
+              "legendFormat": {{ "{{ job }} (self-reported)" }},
               "refId": "C"
             }
           ],
@@ -2945,14 +2946,14 @@ data:
               "instant": false,
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "Open FDs ({{ job }})",
+              "legendFormat": {{"Open FDs ({{ job }})"}},
               "refId": "A"
             },
             {
               "expr": "sum(label_replace(container_fs_usage_bytes{container_name=~\"mixer|istio-proxy\", pod_name=~\"istio-telemetry-.*|istio-policy-.*\"}, \"service\", \"$1\" , \"pod_name\", \"(istio-telemetry|istio-policy)-.*\")) by (container_name, service)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ service }} - {{ container_name }}",
+              "legendFormat": {{ "{{ service }} - {{ container_name }}" }},
               "refId": "B"
             }
           ],
@@ -3033,7 +3034,7 @@ data:
               "expr": "sum(go_goroutines{job=~\"mixer-.*\"}) by (job)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Number of Goroutines ({{ job }})",
+              "legendFormat": {{"Number of Goroutines ({{ job }})" }},
               "refId": "A"
             }
           ],
@@ -3151,7 +3152,7 @@ data:
               "expr": "rate(grpc_server_handled_total[1m])",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "mixer ({{ grpc_method }})",
+              "legendFormat":{{ "mixer ({{ grpc_method }})" }},
               "refId": "C"
             }
           ],
@@ -3236,35 +3237,35 @@ data:
               "expr": "envoy_cluster_mixer_check_server_upstream_rq_time",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ quantile }} (envoy Check)",
+              "legendFormat": {{ "{{ quantile }} (envoy Check)" }},
               "refId": "A"
             },
             {
               "expr": "envoy_cluster_mixer_report_server_upstream_rq_time",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ quantile }} (envoy Report)",
+              "legendFormat": {{ "{{ quantile }} (envoy Report)" }},
               "refId": "E"
             },
             {
               "expr": "histogram_quantile(0.5, sum(rate(grpc_server_handling_seconds_bucket{}[1m])) by (grpc_method, le)) * 1000",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ grpc_method }} 0.5",
+              "legendFormat": {{ "{{ grpc_method }} 0.5" }},
               "refId": "B"
             },
             {
               "expr": "histogram_quantile(0.9, sum(rate(grpc_server_handling_seconds_bucket{}[1m])) by (grpc_method, le)) * 1000",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ grpc_method }} 0.9",
+              "legendFormat": {{ "{{ grpc_method }} 0.9"}},
               "refId": "C"
             },
             {
               "expr": "histogram_quantile(0.99, sum(rate(grpc_server_handling_seconds_bucket{}[1m])) by (grpc_method, le)) * 1000",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ grpc_method }} 0.99",
+              "legendFormat": {{ "{{ grpc_method }} 0.99"}},
               "refId": "D"
             }
           ],
@@ -3358,7 +3359,7 @@ data:
               "expr": "sum(rate(grpc_server_handled_total{grpc_code=~\"Unknown|Unimplemented|Internal|DataLoss\"}[1m])) by (grpc_method)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Mixer {{ grpc_method }}",
+              "legendFormat": {{"Mixer {{ grpc_method }}" }},
               "refId": "B"
             }
           ],
@@ -3452,7 +3453,7 @@ data:
               "expr": "sum(irate(grpc_server_handled_total{grpc_code!=\"OK\",grpc_service=~\".*Mixer\"}[1m])) by (grpc_method)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "Mixer {{ grpc_method }}",
+              "legendFormat": {{"Mixer {{ grpc_method }}" }},
               "refId": "B"
             }
           ],
@@ -3954,7 +3955,7 @@ data:
               "expr": "sum(irate(mixer_runtime_dispatch_count{adapter=~\"$adapter\"}[1m])) by (adapter)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ adapter }}",
+              "legendFormat": {{ "{{ adapter }}" }},
               "refId": "A"
             }
           ],
@@ -4034,21 +4035,21 @@ data:
               "expr": "histogram_quantile(0.5, sum(irate(mixer_runtime_dispatch_duration_bucket{adapter=~\"$adapter\"}[1m])) by (adapter, le))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ adapter }} - p50",
+              "legendFormat": {{ "{{ adapter }} - p50" }},
               "refId": "A"
             },
             {
               "expr": "histogram_quantile(0.9, sum(irate(mixer_runtime_dispatch_duration_bucket{adapter=~\"$adapter\"}[1m])) by (adapter, le))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ adapter }} - p90 ",
+              "legendFormat": {{ "{{ adapter }} - p90 " }},
               "refId": "B"
             },
             {
               "expr": "histogram_quantile(0.99, sum(irate(mixer_runtime_dispatch_duration_bucket{adapter=~\"$adapter\"}[1m])) by (adapter, le))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ adapter }} - p99",
+              "legendFormat": {{ "{{ adapter }} - p99"}},
               "refId": "C"
             }
           ],
@@ -4499,7 +4500,7 @@ data:
               "expr": "label_replace(irate(mixer_runtime_dispatch_count{adapter=\"$adapter\"}[1m]),\"handler\", \"$1 ($3)\", \"handler\", \"(.*)\\\\.(.*)\\\\.(.*)\")",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ handler }} (error: {{  error }})",
+              "legendFormat": {{ "{{ handler }} (error: {{  error }})" }},
               "refId": "A"
             }
           ],
@@ -4579,21 +4580,21 @@ data:
               "expr": "label_replace(histogram_quantile(0.5, sum(rate(mixer_runtime_dispatch_duration_bucket{adapter=\"$adapter\"}[1m])) by (handler, error, le)),  \"handler_short\", \"$1 ($3)\", \"handler\", \"(.*)\\\\.(.*)\\\\.(.*)\")",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "p50 - {{ handler_short }} (error: {{ error }})",
+              "legendFormat": {{ "p50 - {{ handler_short }} (error: {{ error }})" }},
               "refId": "A"
             },
             {
               "expr": "label_replace(histogram_quantile(0.9, sum(irate(mixer_runtime_dispatch_duration_bucket{adapter=\"$adapter\"}[1m])) by (handler, error, le)),  \"handler_short\", \"$1 ($3)\", \"handler\", \"(.*)\\\\.(.*)\\\\.(.*)\")",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "p90 - {{ handler_short }} (error: {{ error }})",
+              "legendFormat": {{ "p90 - {{ handler_short }} (error: {{ error }})" }},
               "refId": "D"
             },
             {
               "expr": "label_replace(histogram_quantile(0.99, sum(irate(mixer_runtime_dispatch_duration_bucket{adapter=\"$adapter\"}[1m])) by (handler, error, le)),  \"handler_short\", \"$1 ($3)\", \"handler\", \"(.*)\\\\.(.*)\\\\.(.*)\")",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "p99 - {{ handler_short }} (error: {{ error }})",
+              "legendFormat": {{ "p99 - {{ handler_short }} (error: {{ error }})" }},
               "refId": "E"
             }
           ],
@@ -4858,7 +4859,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ container_name }} (k8s)",
+              "legendFormat": {{ "{{ container_name }} (k8s)" }},
               "refId": "B",
               "step": 2
             }
@@ -4949,7 +4950,7 @@ data:
               "format": "time_series",
               "hide": false,
               "intervalFactor": 2,
-              "legendFormat": "{{ container_name }} (k8s)",
+              "legendFormat": {{ "{{ container_name }} (k8s)"}},
               "refId": "B",
               "step": 2
             },
@@ -5049,7 +5050,7 @@ data:
               "expr": "container_fs_usage_bytes{container_name=~\"discovery|istio-proxy\", pod_name=~\"istio-pilot-.*\"}",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ container_name }}",
+              "legendFormat": {{ "{{ container_name }}" }},
               "refId": "B",
               "step": 2
             }
@@ -5228,7 +5229,7 @@ data:
               "expr": "sum(rate(pilot_discovery_calls[1m])) by (method)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ method }}",
+              "legendFormat": {{ "{{ method }}" }},
               "refId": "A",
               "step": 2
             }
@@ -5309,7 +5310,7 @@ data:
               "expr": "sum(irate(pilot_discovery_errors[1m])) by (method)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ method }}",
+              "legendFormat": {{ "{{ method }}" }},
               "refId": "A",
               "step": 2
             }
@@ -5390,7 +5391,7 @@ data:
               "expr": "sum(pilot_discovery_cache_size) by (cache_name)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ cache_name }}",
+              "legendFormat": {{ "{{ cache_name }}" }},
               "refId": "A",
               "step": 2
             }
@@ -5471,7 +5472,7 @@ data:
               "expr": "histogram_quantile(0.5, sum(irate(pilot_discovery_resources_bucket[1m])) by (le, method))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ method }} -  p50",
+              "legendFormat": {{ "{{ method }} -  p50" }},
               "refId": "A",
               "step": 2
             },
@@ -5479,7 +5480,7 @@ data:
               "expr": "histogram_quantile(0.9, sum(irate(pilot_discovery_resources_bucket[1m])) by (le, method))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ method }} -  p90",
+              "legendFormat": {{ "{{ method }} -  p90" }},
               "refId": "B",
               "step": 2
             },
@@ -5487,7 +5488,7 @@ data:
               "expr": "histogram_quantile(0.99, sum(irate(pilot_discovery_resources_bucket[1m])) by (le, method))",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ method }} -  p99",
+              "legendFormat": {{ "{{ method }} -  p99" }},
               "refId": "C",
               "step": 2
             }
@@ -6005,7 +6006,7 @@ data:
               "expr": "sum(envoy_cluster_rds_upstream_rq_time) by (quantile)",
               "format": "time_series",
               "intervalFactor": 2,
-              "legendFormat": "{{ quantile }}",
+              "legendFormat": {{ "{{ quantile }}" }},
               "refId": "C",
               "step": 2
             }
@@ -10996,7 +10997,7 @@ data:
                   "expr": "100 - (avg by (cpu) (irate(node_cpu{mode=\"idle\", instance=\"$server\"}[5m])) * 100)",
                   "hide": false,
                   "intervalFactor": 10,
-                  "legendFormat": "{{cpu}}",
+                  "legendFormat": {{ "{{cpu}}" }},
                   "refId": "A",
                   "step": 50
                 }
@@ -11565,7 +11566,7 @@ data:
                   "expr": "rate(node_network_receive_bytes{instance=\"$server\",device!~\"lo\"}[5m])",
                   "hide": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{device}}",
+                  "legendFormat": {{ "{{device}}" }},
                   "refId": "A",
                   "step": 10,
                   "target": ""
@@ -11647,7 +11648,7 @@ data:
                   "expr": "rate(node_network_transmit_bytes{instance=\"$server\",device!~\"lo\"}[5m])",
                   "hide": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{device}}",
+                  "legendFormat": {{ "{{device}}" }},
                   "refId": "B",
                   "step": 10,
                   "target": ""
@@ -11825,7 +11826,7 @@ data:
                   "expr": "sum by(container_name) (container_memory_usage_bytes{pod_name=\"$pod\", container_name=~\"$container\", container_name!=\"POD\"})",
                   "interval": "10s",
                   "intervalFactor": 1,
-                  "legendFormat": "Current: {{ container_name }}",
+                  "legendFormat": {{ "Current: {{ container_name }}" }},
                   "metric": "container_memory_usage_bytes",
                   "refId": "A",
                   "step": 15
@@ -11834,7 +11835,7 @@ data:
                   "expr": "kube_pod_container_resource_requests_memory_bytes{pod=\"$pod\", container=~\"$container\"}",
                   "interval": "10s",
                   "intervalFactor": 2,
-                  "legendFormat": "Requested: {{ container }}",
+                  "legendFormat": {{ "Requested: {{ container }}" }},
                   "metric": "kube_pod_container_resource_requests_memory_bytes",
                   "refId": "B",
                   "step": 20
@@ -11843,7 +11844,7 @@ data:
                   "expr": "kube_pod_container_resource_limits_memory_bytes{pod=\"$pod\", container=~\"$container\"}",
                   "interval": "10s",
                   "intervalFactor": 2,
-                  "legendFormat": "Limit: {{ container }}",
+                  "legendFormat": {{"Limit: {{ container }}" }},
                   "metric": "kube_pod_container_resource_limits_memory_bytes",
                   "refId": "C",
                   "step": 20
@@ -11930,7 +11931,7 @@ data:
                 {
                   "expr": "sum by (container_name)(rate(container_cpu_usage_seconds_total{image!=\"\",container_name!=\"POD\",pod_name=\"$pod\"}[1m]))",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ container_name }}",
+                  "legendFormat": {{ "{{ container_name }}" }},
                   "refId": "A",
                   "step": 30
                 },
@@ -11938,7 +11939,7 @@ data:
                   "expr": "kube_pod_container_resource_requests_cpu_cores{pod=\"$pod\", container=~\"$container\"}",
                   "interval": "10s",
                   "intervalFactor": 2,
-                  "legendFormat": "Requested: {{ container }}",
+                  "legendFormat": {{"Requested: {{ container }}" }},
                   "metric": "kube_pod_container_resource_requests_cpu_cores",
                   "refId": "B",
                   "step": 20
@@ -11947,7 +11948,7 @@ data:
                   "expr": "kube_pod_container_resource_limits_cpu_cores{pod=\"$pod\", container=~\"$container\"}",
                   "interval": "10s",
                   "intervalFactor": 2,
-                  "legendFormat": "Limit: {{ container }}",
+                  "legendFormat": {{"Limit: {{ container }}" }},
                   "metric": "kube_pod_container_resource_limits_memory_bytes",
                   "refId": "C",
                   "step": 20
@@ -12034,7 +12035,7 @@ data:
                 {
                   "expr": "sort_desc(sum by (pod_name) (rate(container_network_receive_bytes_total{pod_name=\"$pod\"}[1m])))",
                   "intervalFactor": 2,
-                  "legendFormat": "{{ pod_name }}",
+                  "legendFormat": {{ "{{ pod_name }}" }},
                   "refId": "A",
                   "step": 30
                 }
@@ -14049,7 +14050,7 @@ data:
               "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"$namespace\", pod_name=~\"$revision.*\", container_name != \"POD\"}[1m])) by (container_name)",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{container_name}}",
+              "legendFormat": {{ "{{container_name}}" }},
               "refId": "A"
             }
           ],
@@ -14129,7 +14130,7 @@ data:
               "expr": "sum(container_memory_usage_bytes{namespace=\"$namespace\", pod_name=~\"$revision.*\", container_name != \"POD\"}) by (container_name)",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{container_name}}",
+              "legendFormat": {{ "{{container_name}}" }},
               "refId": "A"
             }
           ],
@@ -14687,7 +14688,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{destination_revision}}",
+              "legendFormat": {{ "{{destination_revision}}" }},
               "refId": "A"
             }
           ],
@@ -14768,7 +14769,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{ response_code }}",
+              "legendFormat": {{ "{{ response_code }}" }},
               "refId": "A"
             }
           ],
@@ -14865,28 +14866,28 @@ data:
               "expr": "label_replace(histogram_quantile(0.50, sum(rate(istio_revision_request_duration_bucket{destination_namespace=\"$namespace\", destination_configuration=~\"$configuration\",destination_revision=~\"$revision\"}[1m])) by (destination_revision, le)), \"destination_revision\", \"$2\", \"destination_revision\", \"$configuration(-+)(.*)\")",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_revision }} (p50)",
+              "legendFormat": {{ "{{ destination_revision }} (p50)" }},
               "refId": "A"
             },
             {
               "expr": "label_replace(histogram_quantile(0.90, sum(rate(istio_revision_request_duration_bucket{destination_namespace=\"$namespace\", destination_configuration=~\"$configuration\",destination_revision=~\"$revision\"}[1m])) by (destination_revision, le)), \"destination_revision\", \"$2\", \"destination_revision\", \"$configuration(-+)(.*)\")",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_revision }} (p90)",
+              "legendFormat": {{ "{{ destination_revision }} (p90)" }},
               "refId": "B"
             },
             {
               "expr": "label_replace(histogram_quantile(0.95, sum(rate(istio_revision_request_duration_bucket{destination_namespace=\"$namespace\", destination_configuration=~\"$configuration\",destination_revision=~\"$revision\"}[1m])) by (destination_revision, le)), \"destination_revision\", \"$2\", \"destination_revision\", \"$configuration(-+)(.*)\")",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_revision }} (p95)",
+              "legendFormat": {{ "{{ destination_revision }} (p95)" }}},
               "refId": "C"
             },
             {
               "expr": "label_replace(histogram_quantile(0.99, sum(rate(istio_revision_request_duration_bucket{destination_namespace=\"$namespace\", destination_configuration=~\"$configuration\",destination_revision=~\"$revision\"}[1m])) by (destination_revision, le)), \"destination_revision\", \"$2\", \"destination_revision\", \"$configuration(-+)(.*)\")",
               "format": "time_series",
               "intervalFactor": 1,
-              "legendFormat": "{{ destination_revision }} (p99)",
+              "legendFormat": {{ "{{ destination_revision }} (p99)" }},
               "refId": "D"
             }
           ],
@@ -15113,7 +15114,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{destination_revision}}",
+              "legendFormat": {{ "{{destination_revision}}" }},
               "refId": "A"
             }
           ],
@@ -15194,7 +15195,7 @@ data:
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{destination_revision}}",
+              "legendFormat": {{ "{{destination_revision}}" }},
               "refId": "A"
             }
           ],
@@ -15592,211 +15593,210 @@ spec:
           name: scaling-config
         name: scaling-config
 --- null
+# apiVersion: config.istio.io/v1alpha2
+# kind: logentry
+# metadata:
+#   name: requestlog
+#   namespace: istio-system
+# spec:
+#   monitored_resource_type: '"UNSPECIFIED"'
+#   severity: '"Info"'
+#   timestamp: request.time
+#   variables:
+#     destinationConfiguration: destination.labels["serving.knative.dev/configuration"]
+#       | "unknown"
+#     destinationNamespace: destination.namespace | ""
+#     destinationRevision: destination.labels["serving.knative.dev/revision"] | "unknown"
+#     destinationService: destination.service | ""
+#     latency: response.duration | "0ms"
+#     method: request.method | ""
+#     protocol: request.scheme | "http"
+#     referer: request.referer | "unknown"
+#     requestHost: request.host | ""
+#     requestSize: request.size | 0
+#     responseCode: response.code | 0
+#     responseSize: response.size | 0
+#     sourceNamespace: source.namespace | "unknown"
+#     sourceService: source.service | "unknown"
+#     traceId: request.headers["x-b3-traceid"] | "unknown"
+#     url: request.path | ""
+#     userAgent: request.useragent | "unknown"
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: logentry
-metadata:
-  name: requestlog
-  namespace: istio-system
-spec:
-  monitored_resource_type: '"UNSPECIFIED"'
-  severity: '"Info"'
-  timestamp: request.time
-  variables:
-    destinationConfiguration: destination.labels["serving.knative.dev/configuration"]
-      | "unknown"
-    destinationNamespace: destination.namespace | ""
-    destinationRevision: destination.labels["serving.knative.dev/revision"] | "unknown"
-    destinationService: destination.service | ""
-    latency: response.duration | "0ms"
-    method: request.method | ""
-    protocol: request.scheme | "http"
-    referer: request.referer | "unknown"
-    requestHost: request.host | ""
-    requestSize: request.size | 0
-    responseCode: response.code | 0
-    responseSize: response.size | 0
-    sourceNamespace: source.namespace | "unknown"
-    sourceService: source.service | "unknown"
-    traceId: request.headers["x-b3-traceid"] | "unknown"
-    url: request.path | ""
-    userAgent: request.useragent | "unknown"
+# apiVersion: config.istio.io/v1alpha2
+# kind: fluentd
+# metadata:
+#   name: requestloghandler
+#   namespace: istio-system
+# spec:
+#   address: fluentd-ds.monitoring:24224
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: fluentd
-metadata:
-  name: requestloghandler
-  namespace: istio-system
-spec:
-  address: fluentd-ds.monitoring:24224
+# apiVersion: config.istio.io/v1alpha2
+# kind: rule
+# metadata:
+#   name: requestlogtofluentd
+#   namespace: istio-system
+# spec:
+#   actions:
+#   - handler: requestloghandler.fluentd
+#     instances:
+#     - requestlog.logentry
+#   match: "true"
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: rule
-metadata:
-  name: requestlogtofluentd
-  namespace: istio-system
-spec:
-  actions:
-  - handler: requestloghandler.fluentd
-    instances:
-    - requestlog.logentry
-  match: "true"
+# apiVersion: config.istio.io/v1alpha2
+# kind: metric
+# metadata:
+#   name: revisionrequestcount
+#   namespace: istio-system
+# spec:
+#   dimensions:
+#     destination_configuration: destination.labels["serving.knative.dev/configuration"]
+#       | "unknown"
+#     destination_namespace: destination.namespace | "unknown"
+#     destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
+#     destination_service: destination.service | "unknown"
+#     response_code: response.code | 200
+#     source_service: source.service | "unknown"
+#   monitored_resource_type: '"UNSPECIFIED"'
+#   value: "1"
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: metric
-metadata:
-  name: revisionrequestcount
-  namespace: istio-system
-spec:
-  dimensions:
-    destination_configuration: destination.labels["serving.knative.dev/configuration"]
-      | "unknown"
-    destination_namespace: destination.namespace | "unknown"
-    destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
-    destination_service: destination.service | "unknown"
-    response_code: response.code | 200
-    source_service: source.service | "unknown"
-  monitored_resource_type: '"UNSPECIFIED"'
-  value: "1"
+# apiVersion: config.istio.io/v1alpha2
+# kind: metric
+# metadata:
+#   name: revisionrequestduration
+#   namespace: istio-system
+# spec:
+#   dimensions:
+#     destination_configuration: destination.labels["serving.knative.dev/configuration"]
+#       | "unknown"
+#     destination_namespace: destination.namespace | "unknown"
+#     destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
+#     destination_service: destination.service | "unknown"
+#     response_code: response.code | 200
+#     source_service: source.service | "unknown"
+#   monitored_resource_type: '"UNSPECIFIED"'
+#   value: response.duration | "0ms"
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: metric
-metadata:
-  name: revisionrequestduration
-  namespace: istio-system
-spec:
-  dimensions:
-    destination_configuration: destination.labels["serving.knative.dev/configuration"]
-      | "unknown"
-    destination_namespace: destination.namespace | "unknown"
-    destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
-    destination_service: destination.service | "unknown"
-    response_code: response.code | 200
-    source_service: source.service | "unknown"
-  monitored_resource_type: '"UNSPECIFIED"'
-  value: response.duration | "0ms"
+# #apiVersion: config.istio.io/v1alpha2
+# #kind: metric
+# #metadata:
+#   name: revisionrequestsize
+#   namespace: istio-system
+# spec:
+#   dimensions:
+#     destination_configuration: destination.labels["serving.knative.dev/configuration"]
+#       | "unknown"
+#     destination_namespace: destination.namespace | "unknown"
+#     destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
+#     destination_service: destination.service | "unknown"
+#     response_code: response.code | 200
+#     source_service: source.service | "unknown"
+#   monitored_resource_type: '"UNSPECIFIED"'
+#   value: request.size | 0
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: metric
-metadata:
-  name: revisionrequestsize
-  namespace: istio-system
-spec:
-  dimensions:
-    destination_configuration: destination.labels["serving.knative.dev/configuration"]
-      | "unknown"
-    destination_namespace: destination.namespace | "unknown"
-    destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
-    destination_service: destination.service | "unknown"
-    response_code: response.code | 200
-    source_service: source.service | "unknown"
-  monitored_resource_type: '"UNSPECIFIED"'
-  value: request.size | 0
+# apiVersion: config.istio.io/v1alpha2
+# kind: metric
+# metadata:
+#   name: revisionresponsesize
+#   namespace: istio-system
+# spec:
+#   dimensions:
+#     destination_configuration: destination.labels["serving.knative.dev/configuration"]
+#       | "unknown"
+#     destination_namespace: destination.namespace | "unknown"
+#     destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
+#     destination_service: destination.service | "unknown"
+#     response_code: response.code | 200
+#     source_service: source.service | "unknown"
+#   monitored_resource_type: '"UNSPECIFIED"'
+#   value: response.size | 0
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: metric
-metadata:
-  name: revisionresponsesize
-  namespace: istio-system
-spec:
-  dimensions:
-    destination_configuration: destination.labels["serving.knative.dev/configuration"]
-      | "unknown"
-    destination_namespace: destination.namespace | "unknown"
-    destination_revision: destination.labels["serving.knative.dev/revision"] | "unknown"
-    destination_service: destination.service | "unknown"
-    response_code: response.code | 200
-    source_service: source.service | "unknown"
-  monitored_resource_type: '"UNSPECIFIED"'
-  value: response.size | 0
+# apiVersion: config.istio.io/v1alpha2
+# kind: prometheus
+# metadata:
+#   name: revisionpromhandler
+#   namespace: istio-system
+# spec:
+#   metrics:
+#   - instance_name: revisionrequestcount.metric.istio-system
+#     kind: COUNTER
+#     label_names:
+#     - source_service
+#     - destination_namespace
+#     - destination_service
+#     - destination_revision
+#     - destination_configuration
+#     - response_code
+#     name: revision_request_count
+#   - buckets:
+#       explicit_buckets:
+#         bounds:
+#         - 0.005
+#         - 0.01
+#         - 0.025
+#         - 0.05
+#         - 0.1
+#         - 0.25
+#         - 0.5
+#         - 1
+#         - 2.5
+#         - 5
+#         - 10
+#     instance_name: revisionrequestduration.metric.istio-system
+#     kind: DISTRIBUTION
+#     label_names:
+#     - source_service
+#     - destination_namespace
+#     - destination_service
+#     - destination_revision
+#     - destination_configuration
+#     - response_code
+#     name: revision_request_duration
+#   - buckets:
+#       exponentialBuckets:
+#         growthFactor: 10
+#         numFiniteBuckets: 8
+#         scale: 1
+#     instance_name: revisionrequestsize.metric.istio-system
+#     kind: DISTRIBUTION
+#     label_names:
+#     - source_service
+#     - destination_namespace
+#     - destination_service
+#     - destination_revision
+#     - destination_configuration
+#     - response_code
+#     name: revision_request_size
+#   - buckets:
+#       exponentialBuckets:
+#         growthFactor: 10
+#         numFiniteBuckets: 8
+#         scale: 1
+#     instance_name: revisionresponsesize.metric.istio-system
+#     kind: DISTRIBUTION
+#     label_names:
+#     - source_service
+#     - destination_namespace
+#     - destination_service
+#     - destination_revision
+#     - destination_configuration
+#     - response_code
+#     name: revision_response_size
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: prometheus
-metadata:
-  name: revisionpromhandler
-  namespace: istio-system
-spec:
-  metrics:
-  - instance_name: revisionrequestcount.metric.istio-system
-    kind: COUNTER
-    label_names:
-    - source_service
-    - destination_namespace
-    - destination_service
-    - destination_revision
-    - destination_configuration
-    - response_code
-    name: revision_request_count
-  - buckets:
-      explicit_buckets:
-        bounds:
-        - 0.005
-        - 0.01
-        - 0.025
-        - 0.05
-        - 0.1
-        - 0.25
-        - 0.5
-        - 1
-        - 2.5
-        - 5
-        - 10
-    instance_name: revisionrequestduration.metric.istio-system
-    kind: DISTRIBUTION
-    label_names:
-    - source_service
-    - destination_namespace
-    - destination_service
-    - destination_revision
-    - destination_configuration
-    - response_code
-    name: revision_request_duration
-  - buckets:
-      exponentialBuckets:
-        growthFactor: 10
-        numFiniteBuckets: 8
-        scale: 1
-    instance_name: revisionrequestsize.metric.istio-system
-    kind: DISTRIBUTION
-    label_names:
-    - source_service
-    - destination_namespace
-    - destination_service
-    - destination_revision
-    - destination_configuration
-    - response_code
-    name: revision_request_size
-  - buckets:
-      exponentialBuckets:
-        growthFactor: 10
-        numFiniteBuckets: 8
-        scale: 1
-    instance_name: revisionresponsesize.metric.istio-system
-    kind: DISTRIBUTION
-    label_names:
-    - source_service
-    - destination_namespace
-    - destination_service
-    - destination_revision
-    - destination_configuration
-    - response_code
-    name: revision_response_size
----
-apiVersion: config.istio.io/v1alpha2
-kind: rule
-metadata:
-  labels:
-    istio-protocol: http
-  name: revisionpromhttp
-  namespace: istio-system
-spec:
-  actions:
-  - handler: revisionpromhandler.prometheus
-    instances:
-    - revisionrequestcount.metric
-    - revisionrequestduration.metric
-    - revisionrequestsize.metric
-    - revisionresponsesize.metric
+# apiVersion: config.istio.io/v1alpha2
+# kind: rule
+# metadata:
+#   labels:
+#     istio-protocol: http
+#   name: revisionpromhttp
+#   namespace: istio-system
+# spec:
+#   actions:
+#   - handler: revisionpromhandler.prometheus
+#     instances:
+#     - revisionrequestcount.metric
+#     - revisionrequestduration.metric
+#     - revisionrequestsize.metric
+#     - revisionresponsesize.metric
 --- null
 ---
 apiVersion: v1
@@ -16588,10 +16588,10 @@ spec:
 apiVersion: config.istio.io/v1alpha2
 kind: fluentd
 metadata:
-  name: requestloghandler
-  namespace: istio-system
+ name: requestloghandler
+ namespace: istio-system
 spec:
-  address: fluentd-ds.monitoring:24224
+ address: fluentd-ds.monitoring:24224
 ---
 apiVersion: config.istio.io/v1alpha2
 kind: rule
@@ -16761,3 +16761,4 @@ spec:
     - revisionrequestsize.metric
     - revisionresponsesize.metric
 --- null
+{{- end -}}
